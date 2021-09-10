@@ -46,7 +46,8 @@ void Game::UpdateModel()
 	leftKey = wnd.kbd.KeyIsPressed(VK_LEFT);
 	Ctrl = wnd.kbd.KeyIsPressed(VK_CONTROL);
 	shapeIsChanged = wnd.kbd.KeyIsPressed(VK_SHIFT);
-	c = 255;
+	KeepAtBoundaries(ptrx, ptry);
+	
 
 	x = vx + x;
 	y = vy + y;
@@ -73,7 +74,7 @@ void Game::UpdateModel()
 		else
 		{
 			inhibitUp = true;
-			vy--;
+			y = y - 10;
 
 		}
 
@@ -94,7 +95,7 @@ void Game::UpdateModel()
 		else
 		{
 			inhibitDown = true;
-			vy++;
+			y = y + 10;
 		}
 	}
 
@@ -115,7 +116,7 @@ void Game::UpdateModel()
 		else
 		{
 			inhibitRight = true;
-			vx++;
+			x = x + 10;
 		}
 
 	}
@@ -138,7 +139,7 @@ void Game::UpdateModel()
 		else
 		{
 			inhibitLeft = true;
-			vx--;
+			x = x - 10;
 		}
 
 	}
@@ -147,59 +148,90 @@ void Game::UpdateModel()
 		inhibitLeft = false;
 	}
 
-	// Setting X-boundaries for the Cursor. 
-
-	if (x + 5 > gfx.ScreenWidth - 10)
-	{
-		x = gfx.ScreenWidth - 15;
-		vx = 0;
-		
-
-	}
-
 
 	
-	if (x - 5 <= 0)
-	{
-		x = 6;
-		vx = 0;
-		
-	}
-
-	// Setting Y-boundaries for the Cursor.
-
-	if (y + 12 > gfx.ScreenHeight -10)
-	{
-		vy = 0;
-		y = gfx.ScreenHeight - 22;
-	}
-
-	if (y - 5 < 10)
-	{
-		vy = 0;
-		y = 11;
-	}
-
 	/*
-
-	if ((x >= 200 && x <= 400))
-	{
-		if (y >= 200 && y <= 250)
-		{
-			shapeIsChanged = true;
-		}
-	}
-	*/
-	
-
 	if ((x > 200 && x < 400) && (y > 100 && y < 350))
 	{
 		shapeIsChanged = true;
 		c = 0;
 	}
+	*/
 
+
+
+	if (isOverlaped(x, y, x_2, y_2))
+	{
+		g = 0;
+		b = 0;
+	}
+
+
+}
+
+void Game::drawBox(int x, int y, int r, int g, int b)
+{
 
 	
+		gfx.PutPixel(-5 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, -4 + y, r, g, b);
+		gfx.PutPixel(-5 + x, -3 + y, r, g, b);
+		gfx.PutPixel(-4 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-3 + x, -5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 5 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 4 + y, r, g, b);
+		gfx.PutPixel(-5 + x, 3 + y, r, g, b);
+		gfx.PutPixel(-4 + x, 5 + y, r, g, b);
+		gfx.PutPixel(-3 + x, 5 + y, r, g, b);
+		gfx.PutPixel(5 + x, -5 + y, r, g, b);
+		gfx.PutPixel(5 + x, -4 + y, r, g, b);
+		gfx.PutPixel(5 + x, -3 + y, r, g, b);
+		gfx.PutPixel(4 + x, -5 + y, r, g, b);
+		gfx.PutPixel(3 + x, -5 + y, r, g, b);
+		gfx.PutPixel(5 + x, 5 + y, r, g, b);
+		gfx.PutPixel(5 + x, 4 + y, r, g, b);
+		gfx.PutPixel(5 + x, 3 + y, r, g, b);
+		gfx.PutPixel(4 + x, 5 + y, r, g, b);
+		gfx.PutPixel(3 + x, 5 + y, r, g, b);
+	
+
+}
+
+void Game::KeepAtBoundaries(int* ptrx, int* ptry)
+{
+
+	// Setting X-boundaries for the Cursor. 
+
+	if (*ptrx + 5 > gfx.ScreenWidth - 10)
+	{
+		*ptrx = gfx.ScreenWidth - 15;
+		vx = 0;
+
+
+	}
+
+
+
+	if (x - 5 <= 0)
+	{
+		*ptrx = 6;
+		vx = 0;
+
+	}
+
+	// Setting Y-boundaries for the Cursor.
+
+	if (*ptry + 12 > gfx.ScreenHeight - 10)
+	{
+		*ptry = gfx.ScreenHeight - 22;
+		vy = 0;
+	}
+
+	if (*ptry - 5 <= 0)
+	{
+		*ptry = 6;
+		vy = 0;
+	}
 }
 
 void Game::drawReticle(int x, int y, int r, int g, int b)
@@ -222,58 +254,27 @@ void Game::drawReticle(int x, int y, int r, int g, int b)
 
 }
 
+bool Game::isOverlaped(int x, int y, int x_1, int y_2)
+{
+
+
+	return (x + 5 >= x_2 - 5 && x -5 <= x_2 + 5 && y + 5 >= y_2 - 5 && y - 5 <= y_2 + 5);
+	
+ 
+}
+
+
 void Game::ComposeFrame()
 {
 
 	
 
-
-	
+		
 	
 		if (shapeIsChanged) {
 
 
-
-			gfx.PutPixel(x + 5, y + 5, c, 255, b);
-			gfx.PutPixel(x + 6, y + 6, c, 255, b);
-			gfx.PutPixel(x + 7, y + 7, c, 255, b);
-			gfx.PutPixel(x + 8, y + 8, c, 255, b);
-			gfx.PutPixel(x + 9, y + 9, c, 255, b);
-			gfx.PutPixel(x + 10, y + 10, c, 255, b);
-			gfx.PutPixel(x + 11, y + 11, c, 255, b);
-			gfx.PutPixel(x + 12, y + 12, c, 255, b);
-			gfx.PutPixel(x + 12, y + 5, c, 255, b);
-			gfx.PutPixel(x + 11, y + 6, c, 255, b);
-			gfx.PutPixel(x + 10, y + 7, c, 255, b);
-			gfx.PutPixel(x + 9, y + 8, c, 255, b);
-			gfx.PutPixel(x + 8, y + 9, c, 255, b);
-			gfx.PutPixel(x + 7, y + 10, c, 255, b);
-			gfx.PutPixel(x + 6, y + 11, c, 255, b);
-			gfx.PutPixel(x + 5, y + 12, c, 255, b);
-			gfx.PutPixel(x + 8, y + 5, c, 255, b);
-			gfx.PutPixel(x + 8, y + 6, c, 255, b);
-			gfx.PutPixel(x + 8, y + 7, c, 255, b);
-			gfx.PutPixel(x + 8, y + 8, c, 255, b);
-			gfx.PutPixel(x + 8, y + 9, c, 255, b);
-			gfx.PutPixel(x + 8, y + 10, c, 255, b);
-			gfx.PutPixel(x + 8, y + 11, c, 255, b);
-			gfx.PutPixel(x + 8, y + 12, c, 255, b);
-			gfx.PutPixel(x + 5, y + 8, c, 255, b);
-			gfx.PutPixel(x + 6, y + 8, c, 255, b);
-			gfx.PutPixel(x + 7, y + 8, c, 255, b);
-			gfx.PutPixel(x + 8, y + 8, c, 255, b);
-			gfx.PutPixel(x + 9, y + 8, c, 255, b);
-			gfx.PutPixel(x + 10, y + 8, c, 255, b);
-			gfx.PutPixel(x + 11, y + 8, c, 255, b);
-			gfx.PutPixel(x + 12, y + 8, c, 255, b);
-
-
-
-
-
-
-
-
+			drawBox(x, y, c, 255, b);
 
 
 		}
@@ -282,12 +283,13 @@ void Game::ComposeFrame()
 		{
 
 
-			drawReticle(x, y, c, 255, b);
+			drawBox(x, y, c, g, b);
 
 
 		}
 	
 
 
-
+		drawBox(x_2, y_2, 255, 255, 255);
 }
+

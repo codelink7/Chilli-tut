@@ -36,8 +36,13 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
-	/********************************/
+
+	void drawBox(int x, int y, int r, int g, int b);
+	void KeepAtBoundaries(int* ptrx, int* ptry);
 	void drawReticle(int x, int y, int r, int g, int b);
+	bool isOverlaped(int x, int y, int x_1, int y_2);
+
+	/********************************/
 
 private:
 	MainWindow& wnd;
@@ -57,6 +62,12 @@ private:
 
 	int x = 400;
 	int y = 300;
+
+	const int x_2 = 500;
+	const int y_2 = 400;
+
+	int* ptrx = &x;
+	int* ptry = &y;
 
 	bool inhibitRight = false;
 	bool inhibitLeft= false;
