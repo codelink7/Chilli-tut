@@ -41,16 +41,13 @@ void Game::UpdateModel()
 {
 
 	upKey = wnd.kbd.KeyIsPressed(VK_UP);
+	leftKey = wnd.kbd.KeyIsPressed(VK_LEFT);
 	downKey = wnd.kbd.KeyIsPressed(VK_DOWN);
 	rightKey = wnd.kbd.KeyIsPressed(VK_RIGHT);
-	leftKey = wnd.kbd.KeyIsPressed(VK_LEFT);
 	Ctrl = wnd.kbd.KeyIsPressed(VK_CONTROL);
 	shapeIsChanged = wnd.kbd.KeyIsPressed(VK_SHIFT);
-	KeepAtBoundaries(ptrx, ptry);
 	
 
-	x = vx + x;
-	y = vy + y;
 	// Update cursor position with the velocity.
 
 	if (Ctrl)
@@ -66,89 +63,43 @@ void Game::UpdateModel()
 
 	if (upKey)
 	{
-		if (inhibitUp)
-		{
-			// Do nothing
-		}
+		
+		
+		
+			y = y - 1;
 
-		else
-		{
-			inhibitUp = true;
-			y = y - 10;
-
-		}
+		
 
 
 	}
 
-	else
-	{
-		inhibitUp = false;
-	}
 
 	if (downKey)
 	{
-		if (inhibitDown)
-		{
-			// Do nothing.
-		}
-		else
-		{
-			inhibitDown = true;
-			y = y + 10;
-		}
+		
+		
+			
+			y = y + 1;
+		
 	}
 
-	else
-	{
-		inhibitDown = false;
-	}
+
 
 	if (rightKey)
 	{
 
-
-
-		if (inhibitRight)
-		{
-			// Do nothing
-		}
-		else
-		{
-			inhibitRight = true;
-			x = x + 10;
-		}
+			x = x + 1;
+		
 
 	}
-
-	else
-	{
-		inhibitRight = false;
-
-	}
-
 
 
 	if (leftKey)
 	{
-		if (inhibitLeft)
-		{
-			// Do nothing
-		}
-
-		else
-		{
-			inhibitLeft = true;
-			x = x - 10;
-		}
-
+		
+			x = x - 1;
+		
 	}
-	else
-	{
-		inhibitLeft = false;
-	}
-
-
 	
 	/*
 	if ((x > 200 && x < 400) && (y > 100 && y < 350))
@@ -200,37 +151,43 @@ void Game::drawBox(int x, int y, int r, int g, int b)
 void Game::KeepAtBoundaries(int* ptrx, int* ptry)
 {
 
+
+	int right = *ptrx + 5;
+	int left = *ptrx + -5;
+	int up = *ptry + -5;
+	int down = *ptry + 5;
+
 	// Setting X-boundaries for the Cursor. 
 
-	if (*ptrx + 5 > gfx.ScreenWidth - 10)
+	if ( right >= gfx.ScreenWidth - 5)
 	{
-		*ptrx = gfx.ScreenWidth - 15;
-		vx = 0;
+		*ptrx = gfx.ScreenWidth - 10;
+		
 
 
 	}
 
 
 
-	if (x - 5 <= 0)
+	else if (left <= 0)
 	{
-		*ptrx = 6;
-		vx = 0;
+		*ptrx = 10;
+		
 
 	}
 
 	// Setting Y-boundaries for the Cursor.
 
-	if (*ptry + 12 > gfx.ScreenHeight - 10)
+	if (down > gfx.ScreenHeight - 5)
 	{
-		*ptry = gfx.ScreenHeight - 22;
-		vy = 0;
+		*ptry = gfx.ScreenHeight - 10;
+	
 	}
 
-	if (*ptry - 5 <= 0)
+	else if (up < 0)
 	{
 		*ptry = 6;
-		vy = 0;
+		
 	}
 }
 
@@ -288,8 +245,8 @@ void Game::ComposeFrame()
 
 		}
 	
+	KeepAtBoundaries(ptrx, ptry);
 
 
 		drawBox(x_2, y_2, 255, 255, 255);
 }
-
